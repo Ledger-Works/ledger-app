@@ -1,0 +1,15 @@
+{
+	"recommendations": [
+		// Vue
+		"vue.volar",
+		"vue.vscode-typescript-vue-plugin",
+		"rust-lang.rust-analyzer",
+		// Code quality specific
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode",
+		// QoL specific
+		"wayou.vscode-todo-highlight",
+		"usernamehw.errorlens",
+		"mintlify.document"
+	]
+}
