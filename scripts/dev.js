@@ -8,11 +8,11 @@ export const devCommand = 'npx vite';
 export const dev = () => executeWithSync(devCommand);
 
 export const devIos = () => {
-	updateCapacitorConfig(true);
-	return executeWithSync(`npx cap copy ios && npx cap open ios && ${devCommand}`);
+  updateCapacitorConfig(true);
+  return executeWithSync(`npx cap copy ios && npx cap open ios && ${devCommand}`);
 };
 export const devAndroid = () => {
-	updateCapacitorConfig(true);
-	return executeWithSync(`npx cap copy android && npx cap open android && ${devCommand}`);
+  updateCapacitorConfig(true);
+  return executeWithSync(`npx cap copy android && npx cap open android && ${devCommand}`);
 };
 

@@ -12,14 +12,14 @@ export const build = () => execute(buildCommand);
  * It builds the app, then copies the iOS platform files to the `ios` directory
  */
 export const buildIos = () => {
-	updateCapacitorConfig();
-	return execute(`${buildCommand} && npx cap sync ios`);
+  updateCapacitorConfig();
+  return execute(`${buildCommand} && npx cap sync ios`);
 };
 /**
  * `buildAndroid` builds the app, then copies the Android platform to the `android` directory
  */
 export const buildAndroid = () => {
-	updateCapacitorConfig();
-	return execute(`${buildCommand} && npx cap sync android`);
+  updateCapacitorConfig();
+  return execute(`${buildCommand} && npx cap sync android`);
 };
 

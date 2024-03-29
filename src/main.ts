@@ -2,7 +2,7 @@ import { IonicVue } from '@ionic/vue';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 
-import 'uno.css';
+import 'virtual:uno.css'
 import './assets/main.css';
 
 import App from './App.vue';

@@ -5,9 +5,9 @@ import { execute } from './scriptUtils.js';
  * commit-msg hook that runs commitlint
  */
 export const projectSetup = () =>
-	execute(
-		`pnpm install && rm -rf .husky && npx husky install && npx husky add .husky/commit-msg 'npx --no -- commitlint --verbose --edit $1'`
-	);
+  execute(
+    `pnpm install`
+  );
 
 // House keeping
 /**
@@ -25,7 +25,7 @@ export const lint = () => execute('npx eslint --ext .js,.ts,.vue --ignore-path .
  * Runs all commands needed before a build
  * */
 export const preBuild = () => {
-	format();
-	lint();
-	execute('npx vue-tsc --noEmit');
+  format();
+  lint();
+  execute('npx vue-tsc --noEmit');
 };
