@@ -1,12 +1,16 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "cross-vue",
-	"webDir": "dist",
-	"bundledWebRuntime": false,
-	"android": {
-		"path": "./src-capacitor/android"
-	},
-	"ios": {
-		"path": "./src-capacitor/ios"
-	}
+  "appId": "io.ionic.starter",
+  "appName": "cross-vue",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "android": {
+    "path": "./src-capacitor/android"
+  },
+  "ios": {
+    "path": "./src-capacitor/ios"
+  },
+  "server": {
+    "url": "http://192.168.3.14:5161",
+    "clearText": true
+  }
 }

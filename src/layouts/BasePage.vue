@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { IonContent, IonButtons, IonBackButton, IonPage, IonHeader, IonTitle, IonToolbar } from '@ionic/vue';
-// This BasePage component is required in all root level pages in order to have the header and back button work properly along with transitions from Ionic.
+import Header from 'material/TopBar';
 </script>
 
 <template>
-	<ion-page>
-		<ion-header>
-			<ion-toolbar>
-				<ion-buttons slot="start">
-					<ion-back-button></ion-back-button>
-				</ion-buttons>
-				<ion-title>
-					<slot name="title"></slot>
-				</ion-title>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content>
-			<slot></slot>
-		</ion-content>
-	</ion-page>
+	<div class="base-page">
+		<Header
+			type="center-aligned"
+			class="my-header"
+			:traling-icons="['person', 'more_vert']">
+			<template #headline> Ledger App </template>
+			<div class="content">
+				<router-view></router-view>
+			</div>
+		</Header>
+	</div>
 </template>
+<style>
+.material-header {
+	background-color: beige;
+}
+</style>
