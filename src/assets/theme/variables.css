@@ -153,7 +153,7 @@ http://ionicframework.com/docs/theming/ */
    */
 
 	.body {
-		--ion-background-color: #000000;
+		/* --ion-background-color: #000000; */
 		--ion-background-color-rgb: 0, 0, 0;
 
 		--ion-text-color: #ffffff;
@@ -191,7 +191,7 @@ http://ionicframework.com/docs/theming/ */
    * -------------------------------------------
    */
 
-	.md body {
+	.mdx body {
 		--ion-background-color: #000000;
 		--ion-background-color-rgb: 0, 0, 0;
 

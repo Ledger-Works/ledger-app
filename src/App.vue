@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import { hoistRouter } from 'pages/router';
+import BasePage from 'layouts/BasePage.vue';
 
-hoistRouter();
 </script>
 
 <template>
-	<ion-app>
-		<ion-router-outlet />
-	</ion-app>
+	<div class="app-container">
+		<BasePage />
+	</div>
 </template>

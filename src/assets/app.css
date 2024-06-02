@@ -2,3 +2,6 @@
 .welcome-page {
 	@apply justify-center m-0 p-3;
 }
+:root {
+	--ion-mode: md; /* or md for Material Design */
+}

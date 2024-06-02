@@ -2,6 +2,7 @@ import autoImport from 'unplugin-auto-import/vite';
 import { VueRouterAutoImports } from 'unplugin-vue-router';
 import VueRouter from 'unplugin-vue-router/vite';
 import { defineConfig } from 'vite';
+import federation from "@originjs/vite-plugin-federation";
 
 import vue from '@vitejs/plugin-vue';
 
@@ -24,6 +25,12 @@ export default defineConfig({
 	server: serverConfig,
 	preview: serverConfig,
 	plugins: [
+		federation({
+			remotes: {
+			  material: "http://localhost:5500/dist/assets/remoteEntry.js",
+			},
+			shared: ['vue'],
+		  }),
 		tsconfigPaths({}),
 		VueRouter({
 			routesFolder: 'src/pages',

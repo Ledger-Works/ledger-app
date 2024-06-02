@@ -4,21 +4,18 @@
   "main": "./src/main.ts",
   "scripts": {
     "dev": "run-func ./scripts/index.js dev",
-		"dev-ios": "run-func ./scripts/index.js devIos",
-		"dev-android": "run-func ./scripts/index.js devAndroid",
-
-		"build": "run-func ./scripts/index.js build",
-		"build-ios": "run-func ./scripts/index.js buildIos",
-		"build-android": "run-func ./scripts/index.js buildAndroid",
-
-		"preview": "run-func ../scripts/index.js preview",
-		"preview-ios": "run-func ../scripts/index.js previewIos",
-		"preview-android": "run-func ../scripts/index.js previewAndroid",
-
-		"lint": "run-func ./scripts/index.js lint",
-		"format": "run-func ./scripts/index.js format",
-		"project-setup": "run-func ./scripts/houseKeeping.js projectSetup",
-		"pre-build": "run-func ./scripts/index.js preBuild",
+    "dev-ios": "run-func ./scripts/index.js devIos",
+    "dev-android": "run-func ./scripts/index.js devAndroid",
+    "build": "run-func ./scripts/index.js build",
+    "build-ios": "run-func ./scripts/index.js buildIos",
+    "build-android": "run-func ./scripts/index.js buildAndroid",
+    "preview": "run-func ../scripts/index.js preview",
+    "preview-ios": "run-func ../scripts/index.js previewIos",
+    "preview-android": "run-func ../scripts/index.js previewAndroid",
+    "lint": "run-func ./scripts/index.js lint",
+    "format": "run-func ./scripts/index.js format",
+    "project-setup": "run-func ./scripts/houseKeeping.js projectSetup",
+    "pre-build": "run-func ./scripts/index.js preBuild",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -43,6 +40,7 @@
     "@capacitor/cli": "5.6.0",
     "@commitlint/cli": "^18.4.4",
     "@commitlint/config-conventional": "^18.4.4",
+    "@originjs/vite-plugin-federation": "^1.3.5",
     "@tsconfig/node18": "^18.2.2",
     "@types/node": "^18.19.8",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
