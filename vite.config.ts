@@ -2,12 +2,10 @@ import autoImport from 'unplugin-auto-import/vite';
 import { VueRouterAutoImports } from 'unplugin-vue-router';
 import VueRouter from 'unplugin-vue-router/vite';
 import { defineConfig } from 'vite';
-import federation from "@originjs/vite-plugin-federation";
+import tailwind from "tailwindcss"
+import autoprefixer from "autoprefixer"
 
 import vue from '@vitejs/plugin-vue';
-
-import transformerDirective from '@unocss/transformer-directives';
-import Unocss from 'unocss/vite';
 
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -22,15 +20,14 @@ const serverConfig = {
 };
 
 export default defineConfig({
+	css: {
+		postcss: {
+			plugins: [tailwind(), autoprefixer()],
+		  },
+	},
 	server: serverConfig,
 	preview: serverConfig,
 	plugins: [
-		federation({
-			remotes: {
-			  material: "http://localhost:5500/dist/assets/remoteEntry.js",
-			},
-			shared: ['vue'],
-		  }),
 		tsconfigPaths({}),
 		VueRouter({
 			routesFolder: 'src/pages',
@@ -52,14 +49,10 @@ export default defineConfig({
 			},
 			dts: basePathForGeneration.concat('auto-imports.d.ts')
 		}),
-
 		vue({
 			script: {
 				propsDestructure: true
 			}
-		}),
-		Unocss({
-			transformers: [transformerDirective()]
 		})
 	]
 });
