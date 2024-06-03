@@ -12,7 +12,7 @@ import { serverPort } from '../build/config.js';
  */
 export const execute = (command) =>
 	exec(command, (err, stdout, stderr) => {
-		console.log(stdout);
+		// console.log(stdout);
 		if (err) console.error(err);
 		else if (stderr) console.error(stderr);
 	});

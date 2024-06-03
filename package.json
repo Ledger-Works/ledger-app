@@ -32,7 +32,6 @@
     "@capacitor/status-bar": "5.0.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "lucide-vue-next": "^0.381.0",
     "pinia": "^2.1.7",
     "radix-vue": "^1.8.2",
     "tailwind-merge": "^2.3.0",
