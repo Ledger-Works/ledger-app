@@ -3,7 +3,8 @@ import { Header } from '@/components/ui/header'
 </script>
 
 <template>
-	<div class="base-page">
-		<Header title="Add Expense"  />
-	</div>
+  <div class="base-page">
+    <Header title="Add Expense" />
+    <RouterView />
+  </div>
 </template>
