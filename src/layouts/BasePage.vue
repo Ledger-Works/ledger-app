@@ -4,7 +4,7 @@ import { Header } from '@/components/ui/header'
 
 <template>
   <div class="base-page">
-    <Header title="Add Expense" />
+    <Header title="Ledger" />
     <RouterView />
   </div>
 </template>

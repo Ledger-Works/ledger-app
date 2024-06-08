@@ -1,5 +1,5 @@
 <template>
-  <header :class="['bg-white shadow-md', headerClass]">
+  <header :class="['bg-background shadow-md border-solid border-2', headerClass]">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
       <!-- Logo Slot -->
       <slot name="logo">
@@ -10,7 +10,7 @@
             alt="Logo"
             class="h-8 w-8"
           >
-          <span class="text-xl font-bold text-gray-900">{{ title }}</span>
+          <span class="text-xl font-bold">{{ title }}</span>
         </div>
       </slot>
   
