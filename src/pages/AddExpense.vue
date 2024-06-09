@@ -1,5 +1,5 @@
 <template>
-  <div class="add-expense-container h-[300px] flex items-center">
+  <div class="add-expense-container flex items-center">
     <Card class="border-none shadow-none w-full my-6">
       <CardContent>
         <form>
@@ -38,11 +38,25 @@
                     size="icon"
                     class="mr-2 shadow-md p-2"
                   >
-                    <DollarIcon class="w-10 h-10" />
+                    {{ currentCurrency?.symbol }}
                   </Button>
                 </template>
                 <template #content>
-                  <CurrencyList />
+                  <CurrencyList 
+                    v-if="currencies"
+                    :currencies="currencies"
+                    @save:currency="setCurrentCurrency"
+                  />
+                </template>
+                <template #close>
+                  <div class="bg-background footer-bar p-4 px-5 w-[100vw] fixed bottom-0 left-0 border-solid border-2 flex flex-col-reverse">
+                    <Button
+                      type="submit"
+                      variant="outline"
+                    >
+                      Save changes
+                    </Button>
+                  </div>
                 </template>
               </FullScreenModal>
               <Input
@@ -54,7 +68,10 @@
         </form>
       </CardContent>
     </Card>
-    <ExpenseFooter />
+    <ExpenseFooter
+      :current-date="currentExpenseDate"
+      @save:calendar="setCurrentExpenseDate"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -65,9 +82,17 @@ import {
 import { Input } from "@/components/ui/input";
 import ShoppingCartIcon from "@/components/icons/ShoppingCartIcon.vue";
 import { Button } from "@/components/ui/button";
-import DollarIcon from "@/components/icons/DollarIcon.vue";
 import { FullScreenModal } from "@/components/ui/modal"
 import ExpenseTypeList from "@/components/expenses/ExpenseTypeList.vue";
 import CurrencyList from "@/components/expenses/CurrencyList.vue";
 import ExpenseFooter from "@/components/expenses/ExpenseFooter.vue";
+import { useExpenses } from "@/composables/useExpenses";
+import { useCurrencies } from "@/composables/useCurrencies";
+
+const { currentCurrency } = useCurrencies()
+const { setCurrentExpenseDate, currentExpenseDate } = useExpenses()
+
+const { loadCurrencies, listCurrencies: currencies, setCurrentCurrency } = useCurrencies()
+
+loadCurrencies()
 </script>

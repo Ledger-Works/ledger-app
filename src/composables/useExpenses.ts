@@ -1,23 +1,5 @@
 import { ref, computed } from 'vue';
-
-type ExpenseType = {
-  type: string;
-  label: string;
-  icon: string;
-}
-
-type Currency = {
-  name: string;
-  code: string;
-  symbol: string;
-}
-
-type Expense = {
-  expenseType: ExpenseType;
-  currency: Currency;
-  expenseValue: number;
-  time: Date;
-}
+import { type DateValue } from '@internationalized/date'
 
 export function useExpenses() {
   const expenses = ref<Expense[]>([]);
@@ -26,14 +8,17 @@ export function useExpenses() {
     { type: 'transport', label: 'Transport', icon: '🚗' },
     // Add more expense types as needed
   ]);
-  const currencies = ref<Currency[]>([
-    { name: 'US Dollar', code: 'USD', symbol: '$' },
-    { name: 'Euro', code: 'EUR', symbol: '€' },
-    // Add more currencies as needed
-  ]);
+  const currencies = ref<Currency[]>();
+  const currentExpenseType = ref<ExpenseType>();
+  const currentExpenseDate = ref<DateValue>()
 
   const addExpense = (expense: Expense) => {
     expenses.value.push(expense);
+  }
+
+  const setCurrentExpenseDate = (newTime: DateValue) => {
+    const current = newTime;
+    currentExpenseDate.value = current
   };
 
   const listExpenses = computed(() => expenses.value);
@@ -42,6 +27,9 @@ export function useExpenses() {
 
   return {
     addExpense,
+    currentExpenseType,
+    currentExpenseDate,
+    setCurrentExpenseDate,
     listExpenses,
     listExpenseTypes,
     listCurrencies,
