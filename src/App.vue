@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="app-container">
+  <div class="app-container dark">
     <RouterView />
   </div>
 </template>
