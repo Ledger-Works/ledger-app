@@ -15,16 +15,36 @@
                     size="icon"
                     class="mr-2 p-2"
                   >
-                    <ShoppingCartIcon class="w-10 h-10" />
+                    <template v-if="currentExpenseType">
+                      {{ expenseTypes[currentExpenseType] }}
+                    </template>
+                    <div v-else>
+                      🛍️
+                    </div>
                   </Button>
                 </template>
                 <template #content>
-                  <ExpenseTypeList />
+                  <ExpenseTypeList
+                    :expense-types="expenseTypes"
+                    @save:expense-type="selectExpenseType"
+                  />
+                </template>
+                <template #close>
+                  <div class="bg-background footer-bar p-4 px-5 w-[100vw] fixed bottom-0 left-0 border-solid border-2 flex flex-col-reverse">
+                    <Button
+                      type="submit"
+                      variant="outline"
+                    >
+                      Save changes
+                    </Button>
+                  </div>
                 </template>
               </FullScreenModal>
               <Input
                 id="name"
+                v-model="userInputExpenseType"
                 placeholder="Enter a description"
+                @input="determineExpenseType"
               />
             </div>
             <div class="flex">
@@ -80,7 +100,6 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import ShoppingCartIcon from "@/components/icons/ShoppingCartIcon.vue";
 import { Button } from "@/components/ui/button";
 import { FullScreenModal } from "@/components/ui/modal"
 import ExpenseTypeList from "@/components/expenses/ExpenseTypeList.vue";
@@ -89,8 +108,9 @@ import ExpenseFooter from "@/components/expenses/ExpenseFooter.vue";
 import { useExpenses } from "@/composables/useExpenses";
 import { useCurrencies } from "@/composables/useCurrencies";
 
+
 const { currentCurrency } = useCurrencies()
-const { setCurrentExpenseDate, currentExpenseDate } = useExpenses()
+const { setCurrentExpenseDate, currentExpenseDate, expenseTypes, selectExpenseType, currentExpenseType, determineExpenseType, userInputExpenseType } = useExpenses()
 
 const { loadCurrencies, listCurrencies: currencies, setCurrentCurrency } = useCurrencies()
 

@@ -56,7 +56,7 @@ import { Calendar } from '@/components/ui/calendar'
 const date = ref(today(getLocalTimeZone())) as Ref<DateValue>
 
   defineProps<{
-    currentDate: DateValue
+    currentDate: DateValue | undefined
   }>()
 
 const emit = defineEmits<{
