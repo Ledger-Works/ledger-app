@@ -1,22 +1,31 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import BasePage from 'layouts/BasePage.vue'
-import AddExpense from './pages/AddExpense.vue'
+import BasePage from '@/layouts/BasePage.vue';
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 
-const routes = [
-  { 
-		path: '/', 
-		component: BasePage, 
-		children: [
-			{
-				name: 'add',
-				path: 'add',
-				component: AddExpense
-			}
-		]
-	},
-]
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    component: BasePage,
+    children: [
+      {
+        name: 'add',
+        path: 'add',
+        component: () => import('@/pages/AddExpense.vue')
+      },
+      {
+        name: 'expenseDetails',
+        path: 'expenses/:id',
+        component: () => import('@/pages/ExpenseDetails.vue'),
+      },
+      {
+        name: 'my-expenses',
+        path: 'my-expenses',
+        component: () => import('@/pages/ShowExpenses.vue'),
+      }
+    ]
+  },
+];
 
 export const router = createRouter({
   history: createWebHistory(),
-  routes,
-})
+  routes
+});

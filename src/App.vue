@@ -1,10 +1,7 @@
-<script setup lang="ts">
-import BasePage from 'layouts/BasePage.vue';
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
-	<div class="app-container">
-		<BasePage />
-	</div>
+  <div class="app-container">
+    <RouterView />
+  </div>
 </template>
