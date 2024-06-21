@@ -38,6 +38,9 @@
       "@/*": [
         "./src/*"
       ],
+      "@/composables": [
+        "./src/composables/*"
+      ],
       "@/assets/*": [
         "./src/assets/*"
       ],
@@ -50,7 +53,11 @@
       "@/stores/*": [
         "./src/stores/*"
       ],
-    }
+    },
+    "types": [
+      "gapi",
+      "google.accounts"
+    ]
   },
   "references": [
     {

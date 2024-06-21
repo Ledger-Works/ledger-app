@@ -7,6 +7,11 @@ const routes: RouteRecordRaw[] = [
     component: BasePage,
     children: [
       {
+        path: '',
+        name: 'index',
+        component: () => import('@/pages/index.vue')
+      },
+      {
         name: 'add',
         path: 'add',
         component: () => import('@/pages/AddExpense.vue')
