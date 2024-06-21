@@ -1,18 +1,21 @@
-type Currency = {
+import type { DateValue } from "@internationalized/date";
+
+export type Currency = {
   name: string;
   code: string;
   symbol: string;
 }
 
-type ExpenseType = {
-  type: string;
+export type ExpenseType = {
+  value: string;
   label: string;
   icon: string;
 }
 
-type Expense = {
+export type Expense = {
+  id: string,
   expenseType: ExpenseType;
   currency: Currency;
   expenseValue: number;
-  time: Date;
+  time: DateValue | string;
 }

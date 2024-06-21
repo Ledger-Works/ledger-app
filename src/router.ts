@@ -1,6 +1,5 @@
 import BasePage from '@/layouts/BasePage.vue';
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
-import AddExpense from '@/pages/AddExpense.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -10,7 +9,12 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'add',
         path: 'add',
-        component: AddExpense
+        component: () => import('@/pages/AddExpense.vue')
+      },
+      {
+        name: 'expenseDetails',
+        path: 'expenses/:id',
+        component: () => import('@/pages/ExpenseDetails.vue'),
       },
       {
         name: 'my-expenses',

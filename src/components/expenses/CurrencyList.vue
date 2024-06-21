@@ -20,6 +20,7 @@
 </template>
     
 <script setup lang="ts">
+import type { Currency } from '@/types';
 import { Button } from '../ui/button';
 defineProps<{
   currencies: Record<string, Currency>

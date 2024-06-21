@@ -40,6 +40,7 @@
     "radix-vue": "^1.8.2",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^10.0.0",
     "vaul-vue": "^0.1.2",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
@@ -52,6 +53,7 @@
     "@rushstack/eslint-patch": "^1.8.0",
     "@tsconfig/node18": "^18.2.2",
     "@types/node": "^18.19.8",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "@unocss/transformer-directives": "^0.58.3",

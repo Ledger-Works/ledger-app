@@ -10,7 +10,7 @@
       >
         <div class="flex justify-between w-[100%]">
           <div class="expense-name max-w-[200px] text-ellipsis overflow-hidden">
-            {{ props.expenseTypes[expenseType] }}
+            {{ props.expenseTypes[expenseType].icon }}
           </div>
           <div class="currency-code">
             {{ capitalized(expenseType) }}
@@ -22,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ExpenseType } from '@/types';
 import { Button } from '../ui/button';
 type EmojiMapping = {
   [key: string]: string;
@@ -54,6 +55,6 @@ const expenseTypeOptions: (keyof typeof props.expenseTypes)[] = [
 ];
 
 const props = defineProps<{
-  expenseTypes: Record<string, string>
+  expenseTypes: Record<string, ExpenseType>
 }>()
 </script>

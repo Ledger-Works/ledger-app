@@ -1,68 +1,106 @@
 import { ref, computed, type InputHTMLAttributes } from 'vue';
 import { type DateValue } from '@internationalized/date'
+import { useCurrencies } from '@/composables/useCurrencies';
+import type { Currency, Expense, ExpenseType } from '@/types';
+import { generateUUID } from '@/lib/utils';
+
 
 export function useExpenses() {
   const expenses = ref<Expense[]>([]);
+  const currencyStore = useCurrencies()
   // Define a more flexible mapping where keys are arrays of keywords or regex patterns
   const flexibleExpenseTypeMappings = [
     { keywords: ['restaurant', 'dining', 'food'], type: 'restaurants' },
     { keywords: ['grocery', 'supermarket', 'market'], type: 'groceries' },
   ];
-  const expenseTypes = ref({
-    rent: '🏠',
-    utilities: '💡',
-    groceries: '🛍️',
-    restaurants: '🍽️',
-    transportation: '🚗',
-    travel: '✈️',
-    entertainment: '🎥',
-    shopping: '🛍️',
-    personalCare: '💆',
-    loans: '💰',
-    gifts: '🎁',
-    miscellaneous: '📦',
+  const expenseTypes = ref<Record<string, ExpenseType>>({
+    rent: { value: 'rent', label: 'Rent', icon: '🏠' },
+    utilities: { value: 'utilities', label: 'Utilities', icon: '💡' },
+    groceries: { value: 'groceries', label: 'Groceries', icon: '🛍️' },
+    restaurants: { value: 'restaurants', label: 'Restaurants', icon: '🍽️' },
+    transportation: { value: 'transportation', label: 'Transportation', icon: '🚗' },
+    travel: { value: 'travel', label: 'Travel', icon: '✈️' },
+    entertainment: { value: 'entertainment', label: 'Entertainment', icon: '🎥' },
+    shopping: { value: 'shopping', label: 'Shopping', icon: '🛍️' },
+    personalCare: { value: 'personalCare', label: 'PersonalCare', icon: '💆' },
+    loans: { value: 'loans', label: 'Loans', icon: '💰' },
+    gifts: { value: 'gifts', label: 'Gifts', icon: '🎁' },
+    miscellaneous: { value: 'miscellaneous', label: 'Miscellaneous', icon: '📦' },
   });
 
-  const currencies = ref<Currency[]>();
-  const currentExpenseType = ref<string>();
-  const currentExpenseDate = ref<DateValue>()
-  const userInputExpenseType = ref()
 
-  const addExpense = (expense: Expense) => {
-    expenses.value.push(expense);
+  const currencies = ref<Currency[]>();
+  const currentExpense = ref<Expense>({
+    id: '',
+    expenseType: {
+      value: '',
+      label: '',
+      icon: ''
+    },
+    currency: {
+      name: '',
+      code: '',
+      symbol: ''
+    },
+    expenseValue: 0,
+    time: ''
+  })
+  const userInputExpenseType = ref()
+  const isError = ref(false)
+
+  const addExpense = async (): Promise<string> => {
+    const id = generateUUID()
+    if (currentExpense.value) {
+      const expense = currentExpense.value
+      expenses.value.push({
+        ...expense,
+        id,
+        currency: currencyStore.currentCurrency.value,
+      });
+      console.log(expenses)
+    }
+    else {
+      // TODO: Create handle flow
+      isError.value = true
+    }
+    return id
   }
 
-  const determineExpenseType = (): void => {
-    const input = userInputExpenseType.value
-    const normalizedInput = input.trim().toLowerCase();
+  const getExpense = (id: string) => {
+    return expenses.value.find(expense => expense.id === id)
+  }
 
-    // Check against predefined categories first
-    for (const category in expenseTypes.value) {
-      if (normalizedInput.includes(category)) {
-        currentExpenseType.value = category as keyof typeof expenseTypes.value;
-      }
-    }
+  // const determineExpenseType = (): void => {
+  //   const input = userInputExpenseType.value
+  //   const normalizedInput = input.trim().toLowerCase();
 
-    // Check against flexible mappings
-    for (const mapping of flexibleExpenseTypeMappings) {
-      for (const keyword of mapping.keywords) {
-        if (normalizedInput.includes(keyword)) {
-          currentExpenseType.value = mapping.type as keyof typeof expenseTypes.value;
-        }
-      }
-    }
+  //   // Check against predefined categories first
+  //   for (const category in expenseTypes.value) {
+  //     if (normalizedInput.includes(category)) {
+  //       currentExpense.value.expenseType = category;
+  //     }
+  //   }
 
-    // Default to 'miscellaneous' if no match found
-    currentExpenseType.value = 'miscellaneous';
-  };
+  //   // Check against flexible mappings
+  //   for (const mapping of flexibleExpenseTypeMappings) {
+  //     for (const keyword of mapping.keywords) {
+  //       if (normalizedInput.includes(keyword)) {
+  //         currentExpenseType.value = mapping.type as keyof typeof expenseTypes.value;
+  //       }
+  //     }
+  //   }
+
+  //   // Default to 'miscellaneous' if no match found
+  //   currentExpenseType.value = 'miscellaneous';
+  // };
 
   const setCurrentExpenseDate = (newTime: DateValue) => {
     const current = newTime;
-    currentExpenseDate.value = current
+    currentExpense.value.time = current
   };
 
-  const selectExpenseType = (expenseType: string) => {
-    currentExpenseType.value = expenseType
+  const selectExpenseType = (expenseTypeId: ExpenseType['value']) => {
+    currentExpense.value.expenseType = expenseTypes.value[expenseTypeId]
   };
 
   const listExpenses = computed(() => expenses.value);
@@ -71,13 +109,13 @@ export function useExpenses() {
 
   return {
     addExpense,
-    currentExpenseType,
     expenseTypes,
-    currentExpenseDate,
     userInputExpenseType,
     selectExpenseType,
     setCurrentExpenseDate,
-    determineExpenseType,
+    currentExpense,
+    getExpense,
+    // determineExpenseType,
     listExpenses,
     listExpenseTypes,
     listCurrencies,

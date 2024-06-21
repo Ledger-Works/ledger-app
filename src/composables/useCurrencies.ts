@@ -1,4 +1,5 @@
 import { fetchCurrencies } from '@/services/api';
+import type { Currency } from '@/types';
 import { ref, computed } from 'vue';
 
 const currentCurrency = ref<Currency>(

@@ -56,14 +56,15 @@ import { Calendar } from '@/components/ui/calendar'
 const date = ref(today(getLocalTimeZone())) as Ref<DateValue>
 
   defineProps<{
-    currentDate: DateValue | undefined
+    currentDate: DateValue | string
   }>()
 
 const emit = defineEmits<{
   'save:calendar': [value: DateValue]
+  'save:data': []
 }>()
 
 function saveExpense() {
-
+  emit('save:data')
 }
 </script>
