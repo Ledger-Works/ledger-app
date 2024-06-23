@@ -10,7 +10,6 @@ export function useStorage(): UseStorageReturn {
 
     // State management for IndexedDB
     const useIndexedDB = async <T>(key: string, initialValue?: T): Promise<Ref<T | null>> => {
-        debugger
         const dbPromise = new Promise<IDBDatabase>((resolve, reject) => {
             const request = indexedDB.open('my-database', 1);
             request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
