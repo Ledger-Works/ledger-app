@@ -12,20 +12,22 @@ export function generateUUID() {
 
 
 export const scriptLoader = (scriptLink: string, callback: () => void) => {
-  const script = document.createElement('script');
+  return new Promise((res, rej) => {
+    const script = document.createElement('script');
 
-  script.async = true;
-  script.defer = true;
+    script.async = true;
+    script.defer = true;
 
-  script.src = scriptLink
+    script.src = scriptLink
 
-  script.onload = () => {
-    callback()
-  }
+    script.onload = () => {
+      res(callback())
+    }
 
-  script.onerror = () => {
-    console.error('error loading script')
-  }
+    script.onerror = () => {
+      rej('error loading script')
+    }
 
-  document.body.appendChild(script)
+    document.body.appendChild(script)
+  })
 }

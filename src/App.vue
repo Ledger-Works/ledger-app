@@ -10,8 +10,16 @@
 <script setup lang="ts">
 import useGoogleSheets from "@/composables/useGoogleSheets.ts";
 
-const { loadGapiScript, loadGisClientScript } = useGoogleSheets();
+const { loadGapiScript, loadGisClientScript, listSheets } = useGoogleSheets();
 
-loadGapiScript()
-loadGisClientScript()
+async function init() {
+  try {
+    await loadGapiScript()
+    await loadGisClientScript()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+init()
 </script>
