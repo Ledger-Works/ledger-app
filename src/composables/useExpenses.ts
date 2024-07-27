@@ -57,7 +57,7 @@ export function useExpenses() {
         id,
         currency: currencyStore.currentCurrency.value,
       });
-      console.log(expenses)
+      console.log(expenses.value)
     }
     else {
       // TODO: Create handle flow

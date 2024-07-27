@@ -1,4 +1,5 @@
 import { useStorage } from "@/composables/useStorage";
+import { ROUTE_NAMES } from "@/constants";
 import { scriptLoader } from "@/lib/utils";
 import axios from "axios";
 
@@ -9,6 +10,8 @@ let tokenClient: google.accounts.oauth2.TokenClient;
 const useGoogleSheets = () => {
 
   const { useIndexedDB } = useStorage()
+  const accessToken = ref()
+  const router = useRouter()
 
   const loadGapiScript = async (): Promise<void> => {
     await scriptLoader("https://apis.google.com/js/api.js", () => gapi.load('client', initializeGapiClient));
@@ -19,7 +22,7 @@ const useGoogleSheets = () => {
   };
 
   const getGoogleToken = async (): Promise<Ref<string | null>> => {
-    return await useIndexedDB('access_token') || 'NO Token'
+    return await useIndexedDB('access_token') || ''
   }
 
   /**
@@ -44,10 +47,35 @@ const useGoogleSheets = () => {
       client_id: import.meta.env.VITE_CLIENT_ID,
       scope: SCOPES,
       callback: (tokenResponse: google.accounts.oauth2.TokenResponse) => {
-        useIndexedDB('access_token', tokenResponse.access_token)
+        const tokenExpirationTime = Number(tokenResponse.expires_in)
+        accessToken.value = tokenResponse.access_token
+        useIndexedDB('access_token', accessToken.value)
+        router.push({ name: ROUTE_NAMES.LIST_SHEETS })
+        setTimeout(() => {
+          accessToken.value = ''
+          useIndexedDB('access_token', '')
+        }, tokenExpirationTime * 1000)
       }
     });
   };
+
+  const listSheetData = async (spreadsheetId: string, ranges = 'Transactions!A1:J14') => {
+    let data = {}
+    await loadGapiScript()
+    await loadGisClientScript()
+    if (window.gapi && window.gapi.client?.sheets) {
+      try {
+        const response = await gapi.client?.sheets.spreadsheets.values.batchGet({
+          spreadsheetId: spreadsheetId,
+          ranges: ranges,
+        })
+        data = response.result;
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    return data
+  }
 
   /**
    * Handle user authentication
@@ -84,23 +112,31 @@ const useGoogleSheets = () => {
 
   // Function to list sheets in the spreadsheet
   async function listSheets() {
-    const accessToken: Ref<string | null> = await getGoogleToken()
-    const spreadsheetData = await getAllSpreadsheets(accessToken.value || '');
-
-    if (spreadsheetData.sheets) {
-      const sheetNames = spreadsheetData.sheets.map(sheet => sheet.properties.title);
-      console.log('Sheet Names:', sheetNames);
-    } else {
-      console.error('No sheets found or unable to access spreadsheet data.');
+    let spreadsheetData = { files: [] }
+    try {
+      const accessToken: Ref<string | null> = await getGoogleToken()
+      spreadsheetData = await getAllSpreadsheets(accessToken.value || '');
+      if (spreadsheetData.files) {
+        const sheetNames = spreadsheetData.files.map((sheet: any) => sheet.name);
+        console.log('Sheet Names:', sheetNames);
+      } else {
+        console.error('No sheets found or unable to access spreadsheet data.');
+      }
+    } catch (error) {
+      console.log(error)
     }
+    return spreadsheetData.files
+
   }
 
   return {
+    accessToken,
     getGoogleToken,
     loadGapiScript,
     loadGisClientScript,
     authenticateUser,
-    listSheets
+    listSheets,
+    listSheetData,
   };
 };
 

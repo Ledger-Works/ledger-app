@@ -3,8 +3,8 @@ import { Header } from '@/components/ui/header'
 </script>
 
 <template>
-  <div class="base-page">
+  <div class="base-page flex flex-col h-screen">
     <Header title="Ledger" />
-    <RouterView />
+    <RouterView class="flex-grow" />
   </div>
 </template>
