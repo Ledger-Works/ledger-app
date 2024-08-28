@@ -1,123 +1,157 @@
-import { ref, computed, type InputHTMLAttributes } from 'vue';
-import { type DateValue } from '@internationalized/date'
+import { ref, computed } from 'vue';
 import { useCurrencies } from '@/composables/useCurrencies';
-import type { Currency, Expense, ExpenseType } from '@/types';
+import type { ExpenseType, ExpenseWithDetails, NewExpense, ExpenseSplit, Expense, Group } from '@/types';
 import { generateUUID } from '@/lib/utils';
+import { useSupabase } from '@/composables/useSupabase';
+import { useErrors } from '@/composables/useErrors';
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return String(error);
+}
 
 export function useExpenses() {
-  const expenses = ref<Expense[]>([]);
-  const currencyStore = useCurrencies()
-  // Define a more flexible mapping where keys are arrays of keywords or regex patterns
-  const flexibleExpenseTypeMappings = [
-    { keywords: ['restaurant', 'dining', 'food'], type: 'restaurants' },
-    { keywords: ['grocery', 'supermarket', 'market'], type: 'groceries' },
-  ];
+  const expenses = ref<ExpenseWithDetails[]>([]);
+  const currencyStore = useCurrencies();
+  const supabase = useSupabase();
+  const errors = useErrors();
+
   const expenseTypes = ref<Record<string, ExpenseType>>({
-    rent: { value: 'rent', label: 'Rent', icon: '🏠' },
-    utilities: { value: 'utilities', label: 'Utilities', icon: '💡' },
-    groceries: { value: 'groceries', label: 'Groceries', icon: '🛍️' },
-    restaurants: { value: 'restaurants', label: 'Restaurants', icon: '🍽️' },
-    transportation: { value: 'transportation', label: 'Transportation', icon: '🚗' },
-    travel: { value: 'travel', label: 'Travel', icon: '✈️' },
-    entertainment: { value: 'entertainment', label: 'Entertainment', icon: '🎥' },
-    shopping: { value: 'shopping', label: 'Shopping', icon: '🛍️' },
-    personalCare: { value: 'personalCare', label: 'PersonalCare', icon: '💆' },
-    loans: { value: 'loans', label: 'Loans', icon: '💰' },
-    gifts: { value: 'gifts', label: 'Gifts', icon: '🎁' },
-    miscellaneous: { value: 'miscellaneous', label: 'Miscellaneous', icon: '📦' },
+    rent: { id: generateUUID(), value: 'rent', label: 'Rent', icon: '🏠' },
+    utilities: { id: generateUUID(), value: 'utilities', label: 'Utilities', icon: '💡' },
+    groceries: { id: generateUUID(), value: 'groceries', label: 'Groceries', icon: '🛍️' },
+    restaurants: { id: generateUUID(), value: 'restaurants', label: 'Restaurants', icon: '🍽️' },
+    transportation: { id: generateUUID(), value: 'transportation', label: 'Transportation', icon: '🚗' },
+    travel: { id: generateUUID(), value: 'travel', label: 'Travel', icon: '✈️' },
+    entertainment: { id: generateUUID(), value: 'entertainment', label: 'Entertainment', icon: '🎥' },
+    shopping: { id: generateUUID(), value: 'shopping', label: 'Shopping', icon: '🛍️' },
+    personalCare: { id: generateUUID(), value: 'personalCare', label: 'PersonalCare', icon: '💆' },
+    loans: { id: generateUUID(), value: 'loans', label: 'Loans', icon: '💰' },
+    gifts: { id: generateUUID(), value: 'gifts', label: 'Gifts', icon: '🎁' },
+    miscellaneous: { id: generateUUID(), value: 'miscellaneous', label: 'Miscellaneous', icon: '📦' },
   });
 
+  const currentExpense = ref<NewExpense>({
+    groupId: '',
+    description: '',
+    expenseTypeId: '',
+    currencyCode: '',
+    amount: 0,
+    time: new Date(),
+    paidBy: '',
+    splits: []
+  });
 
-  const currencies = ref<Currency[]>();
-  const currentExpense = ref<Expense>({
-    id: '',
-    expenseType: {
-      value: '',
-      label: '',
-      icon: ''
-    },
-    currency: {
-      name: '',
-      code: '',
-      symbol: ''
-    },
-    expenseValue: 0,
-    time: ''
-  })
-  const userInputExpenseType = ref()
-  const isError = ref(false)
-
-  const addExpense = async (): Promise<string> => {
-    const id = generateUUID()
-    if (currentExpense.value) {
-      const expense = currentExpense.value
-      expenses.value.push({
-        ...expense,
-        id,
-        currency: currencyStore.currentCurrency.value,
-      });
-      console.log(expenses)
+  const addExpense = async (groupId: string): Promise<string | undefined> => {
+    try {
+      if (currentExpense.value) {
+        const newExpense: NewExpense = {
+          ...currentExpense.value,
+          groupId,
+          currencyCode: currencyStore.currentCurrency.value.code
+        };
+        const addedExpense: Expense = await supabase.addExpense(newExpense);
+        if (addedExpense && addedExpense.id) {
+          await fetchExpenses(groupId);
+          return (addedExpense as Expense).id;
+        } else {
+          throw new Error('Failed to add expense: No ID returned');
+        }
+      }
+    } catch (error) {
+      errors.showError('Failed to add expense', getErrorMessage(error));
     }
-    else {
-      // TODO: Create handle flow
-      isError.value = true
-    }
-    return id
-  }
-
-  const getExpense = (id: string) => {
-    return expenses.value.find(expense => expense.id === id)
-  }
-
-  // const determineExpenseType = (): void => {
-  //   const input = userInputExpenseType.value
-  //   const normalizedInput = input.trim().toLowerCase();
-
-  //   // Check against predefined categories first
-  //   for (const category in expenseTypes.value) {
-  //     if (normalizedInput.includes(category)) {
-  //       currentExpense.value.expenseType = category;
-  //     }
-  //   }
-
-  //   // Check against flexible mappings
-  //   for (const mapping of flexibleExpenseTypeMappings) {
-  //     for (const keyword of mapping.keywords) {
-  //       if (normalizedInput.includes(keyword)) {
-  //         currentExpenseType.value = mapping.type as keyof typeof expenseTypes.value;
-  //       }
-  //     }
-  //   }
-
-  //   // Default to 'miscellaneous' if no match found
-  //   currentExpenseType.value = 'miscellaneous';
-  // };
-
-  const setCurrentExpenseDate = (newTime: DateValue) => {
-    const current = newTime;
-    currentExpense.value.time = current
+  };
+  const getExpense = (id: string): ExpenseWithDetails | undefined => {
+    return expenses.value.find(expense => expense.id === id);
   };
 
-  const selectExpenseType = (expenseTypeId: ExpenseType['value']) => {
-    currentExpense.value.expenseType = expenseTypes.value[expenseTypeId]
+  const fetchExpenses = async (groupId: string): Promise<void> => {
+    try {
+      const allExpenses = await supabase.getExpenses() || [];
+      expenses.value = allExpenses.filter(expense => expense.groupId === groupId);
+    } catch (error) {
+      errors.showError('Failed to fetch expenses', getErrorMessage(error));
+    }
+  };
+
+  const fetchGroups = async (): Promise<Group[]> => {
+    let groups: Group[] = []
+    try {
+      const groupResponse = await supabase.getGroups() || [];
+      groups = groupResponse.map((g) => {
+        return {
+          ...g,
+          isPersonalSpace: g.is_personal_space,
+        }
+      })
+    } catch (error) {
+      errors.showError('Failed to fetch expenses', getErrorMessage(error));
+    }
+    return groups
+  };
+
+  const setCurrentExpenseDate = (newTime: Date): void => {
+    currentExpense.value.time = newTime;
+  };
+
+  const selectExpenseType = (expenseTypeId: string): void => {
+    currentExpense.value.expenseTypeId = expenseTypeId;
+  };
+
+  const addExpenseSplit = (split: ExpenseSplit): void => {
+    currentExpense.value.splits.push(split);
+  };
+
+  const clearExpenseSplits = (): void => {
+    currentExpense.value.splits = [];
+  };
+
+  const resetCurrentExpense = (): void => {
+    currentExpense.value = {
+      groupId: '',
+      description: '',
+      expenseTypeId: '',
+      currencyCode: '',
+      amount: 0,
+      time: new Date(),
+      paidBy: '',
+      splits: []
+    };
+  };
+
+  const setExpenseDescription = (description: string): void => {
+    currentExpense.value.description = description;
+  };
+
+  const setExpenseAmount = (amount: number): void => {
+    currentExpense.value.amount = amount;
+  };
+
+  const setExpensePaidBy = (userId: string): void => {
+    currentExpense.value.paidBy = userId;
   };
 
   const listExpenses = computed(() => expenses.value);
-  const listExpenseTypes = computed(() => expenseTypes.value);
-  const listCurrencies = computed(() => currencies.value);
+  const listExpenseTypes = computed(() => Object.values(expenseTypes.value));
 
   return {
-    addExpense,
-    expenseTypes,
-    userInputExpenseType,
-    selectExpenseType,
-    setCurrentExpenseDate,
+    expenses,
     currentExpense,
+    expenseTypes,
+    addExpense,
     getExpense,
-    // determineExpenseType,
+    fetchExpenses,
+    fetchGroups,
+    setCurrentExpenseDate,
+    selectExpenseType,
+    addExpenseSplit,
+    clearExpenseSplits,
+    resetCurrentExpense,
+    setExpenseDescription,
+    setExpenseAmount,
+    setExpensePaidBy,
     listExpenses,
-    listExpenseTypes,
-    listCurrencies,
+    listExpenseTypes
   };
 }

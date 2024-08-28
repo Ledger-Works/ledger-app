@@ -9,8 +9,8 @@
         size="icon"
         class="mr-2 p-2"
       >
-        <template v-if="currentExpense.expenseType.value">
-          {{ expenseTypes[currentExpense.expenseType.value].icon }}
+        <template v-if="currentExpense.expenseTypeId">
+          {{ expenseTypes[currentExpense.expenseTypeId].icon }}
         </template>
         <div v-else>
           🛍️
@@ -39,7 +39,7 @@
 </template>
 <script setup lang="ts">
 import ExpenseTypeList from "@/components/expenses/ExpenseTypeList.vue";
-import type { Expense, ExpenseType } from "@/types";
+import type { ExpenseType, NewExpense } from "@/types";
 import { Button } from "@/components/ui/button";
 import FullScreenModal from "@/components/ui/modal/FullScreenModal.vue";
 
@@ -48,7 +48,7 @@ const emits = defineEmits<{
 }>()
 
 defineProps<{
-   expenseTypes: Record<string, ExpenseType>
-   currentExpense: Expense
+  expenseTypes: Record<string, ExpenseType>
+  currentExpense: NewExpense
 }>()
 </script>
