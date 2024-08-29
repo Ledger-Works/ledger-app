@@ -1,5 +1,5 @@
 <template>
-  <div class="expense-footer flex justify-between p-4 px-5 w-[100vw] fixed bottom-0 border-solid border-2">
+  <div class="expense-footer flex justify-between p-4 px-5 w-[100vw] fixed bottom-0 border-solid border-2 left-0">
     <BottomSheet
       title="Choose Date"
     >
@@ -7,16 +7,16 @@
         <Button
           variant="outline"
           size="icon"
-          class="mr-2 shadow-md p-2 w-[100px]"
+          class="mr-2 shadow-md p-2 w-[150px]"
         >
           <CalendarIcon class="w-4 h-4 mr-2" />
-          {{ currentDate }}
+          {{ currentDate.toDateString() }}
         </Button>
       </template>
       <template #content>
         <div class="mt-8 centered-div w-[calc(100%)]  flex justify-center">
           <Calendar
-            v-model="date"
+            v-model="dateValue"
             :weekday-format="'short'"
             class="rounded-md border w-min"
           />
@@ -50,19 +50,24 @@ import { Button } from "@/components/ui/button";
 import CalendarIcon from "@/components/icons/CalendarIcon.vue";
 import { BottomSheet } from "@/components/ui/sheet"
 import { type Ref, ref } from 'vue'
-import { type DateValue, getLocalTimeZone, today } from '@internationalized/date'
+import { type DateValue, parseDate } from '@internationalized/date'
 import { Calendar } from '@/components/ui/calendar'
 
-const date = ref(today(getLocalTimeZone())) as Ref<DateValue>
+const date = ref(new Date())
 
-  defineProps<{
-    currentDate: DateValue | string
-  }>()
+defineProps<{
+  currentDate: Date
+}>()
 
 const emit = defineEmits<{
-  'save:calendar': [value: DateValue]
+  'save:calendar': [value: Date]
   'save:data': []
 }>()
+
+const dateValue = computed((): DateValue => {
+  // Convert DateValue to JavaScript Date
+  return parseDate(date.value.toISOString().split('T')[0]);
+})
 
 function saveExpense() {
   emit('save:data')
