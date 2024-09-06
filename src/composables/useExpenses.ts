@@ -66,13 +66,8 @@ export function useExpenses() {
     return expenses.value.find(expense => expense.id === id);
   };
 
-  const fetchExpenses = async (groupId: string): Promise<void> => {
-    try {
-      const allExpenses = await supabase.getExpenses() || [];
-      expenses.value = allExpenses.filter(expense => expense.groupId === groupId);
-    } catch (error) {
-      errors.showError('Failed to fetch expenses', getErrorMessage(error));
-    }
+  const fetchExpenses = async (groupId: string): Promise<ExpenseWithDetails[]> => {
+    return await supabase.getExpenses(groupId) || [];
   };
 
   const fetchGroups = async (): Promise<Group[]> => {
