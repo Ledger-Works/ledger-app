@@ -14,12 +14,12 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: ROUTE_NAMES.EXPENSE_DETAILS,
-        path: 'expenses/:id',
+        path: 'expenses/:groupId/:id',
         component: () => import('@/pages/ExpenseDetails.vue'),
       },
       {
         name: ROUTE_NAMES.EXPENSES,
-        path: 'expenses',
+        path: 'expenses/:groupId',
         component: () => import('@/pages/ShowExpenses.vue'),
       },
       {

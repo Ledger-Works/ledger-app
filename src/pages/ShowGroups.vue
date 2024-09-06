@@ -72,10 +72,8 @@ onMounted(async () => {
 
 function openGroup(groupId: boolean): void {
   router.push({
-    name: ROUTE_NAMES.ADD_GROUP,
-    query: {
-      personal: groupId
-    }
+    name: ROUTE_NAMES.EXPENSES,
+    params: { groupId }
   })
 }
 </script>
